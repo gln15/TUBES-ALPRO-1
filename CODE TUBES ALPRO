@@ -1,0 +1,501 @@
+package main
+
+import "fmt"
+
+const NMAX int = 1024
+
+type transaksi struct {
+	sumber           string
+	nominal          int
+	biayaOperasional int
+	tanggal          int
+	bulan            string
+}
+
+type arrTransaksi [NMAX]transaksi
+
+var username, password string
+var x, profit int
+var dataTransaksi int
+var t transaksi
+var dataT arrTransaksi
+
+func main() {
+	dummy()
+	start()
+}
+
+func start() {
+	fmt.Println("  __        _______ _     ____ ___  __  __ _____   ")
+	fmt.Println("  \\ \\      / / ____| |   / ___/ _ \\|  \\/  | ____| ")
+	fmt.Println("   \\ \\ /\\ / /|  _| | |  | |  | | | | |\\/| |  _|    ")
+	fmt.Println("    \\ V  V / | |___| |__| |__| |_| | |  | | |___     ")
+	fmt.Println("     \\_/\\_/  |_____|_____\\____\\___/|_|  |_|_____|  ")
+
+	fmt.Print("Username : ")
+	fmt.Scan(&username)
+	fmt.Print("Password : ")
+	fmt.Scan(&password)
+
+	fmt.Println("=======================================")
+	fmt.Println("||                                   ||")
+	fmt.Printf("||          H I   W E L C O M E      ||\n")
+	fmt.Println("||                                   ||")
+	fmt.Printf("||               %s                ||\n", username)
+	fmt.Println("||                                   ||")
+	fmt.Println("=======================================")
+
+	daftarLayanan()
+}
+
+func daftarLayanan() {
+	fmt.Println("\nLayanan : ", "\n1. Catat Transaksi", "\n2. Cari Transaksi", "\n3. Laporan Analisis", "\n4. Ubah Transaksi", "\n5. Hapus Transaksi", "\n6. Lihat Transaksi","\n0. Keluar\n")
+	fmt.Print("Pilihan Anda : ")
+	fmt.Scan(&x)
+
+	if x == 0 {
+		fmt.Println("")
+	} else if x == 1 {
+		catatTransaksi()
+	} else if x == 2 {
+		cariTransaksi()
+	} else if x == 3 {
+		laporanAnalisis()
+	} else if x == 4 {
+		ubahTransaksi()
+	} else if x == 5 {
+		hapusTransaksi()
+	} else if x == 6 {
+		lihatTransaksi()
+	} else {
+		fmt.Println("\nMasukan tidak valid, silahkan coba lagi")
+		daftarLayanan()
+	}
+}
+
+func catatTransaksi() {
+	fmt.Println("\n1. Catat Transaksi", "\n0. Kembali ke daftar layanan\n")
+	fmt.Print("Pilihan Anda : ")
+	fmt.Scan(&x)
+
+	if x == 1 {
+		isiTransaksi()
+		catatTransaksi()
+	} else if x == 0 {
+		daftarLayanan()
+	} else {
+		fmt.Println("\nMasukan tidak valid, silahkan coba lagi")
+		catatTransaksi()
+	}
+}
+
+func isiTransaksi() {
+	fmt.Println("\nCatat Transaksi")
+	fmt.Println("Pilih Sumber Pendapatan:")
+	fmt.Println("1. Wasiat")
+	fmt.Println("2. Freelance")
+	fmt.Println("3. ContenCreator")
+	fmt.Println("4. Investasi")
+	fmt.Println("5. Lainnya")
+
+	var pilihan int
+	fmt.Print("Pilihan Anda: ")
+	fmt.Scan(&pilihan)
+
+	if pilihan == 1 {
+		t.sumber = "Wasiat"
+	} else if pilihan == 2 {
+		t.sumber = "Freelance"
+	} else if pilihan == 3 {
+		t.sumber = "ContenCreator"
+	} else if pilihan == 4 {
+		t.sumber = "Investasi"
+	} else if pilihan == 5 {
+		fmt.Print("Masukkan sumber lainnya: ")
+		fmt.Scan(&t.sumber)
+	} else {
+		fmt.Println("Pilihan tidak valid, silakan coba lagi.")
+		isiTransaksi()
+		return
+	}
+	fmt.Print("Masukkan Nominal : ")
+	fmt.Scan(&t.nominal)
+	fmt.Print("Masukkan Biaya Operasional : ")
+	fmt.Scan(&t.biayaOperasional)
+	fmt.Print("Tanggal, Bulan : ")
+	fmt.Scan(&t.tanggal, &t.bulan)
+
+	profit = t.nominal - t.biayaOperasional
+
+	dataT[dataTransaksi] = t
+	dataTransaksi++
+}
+
+func cariTransaksi() {
+	fmt.Println("\n1. Cari Berdasarkan Sumber Pendapatan", "\n2. Cari Berdasarkan Tanggal & Bulan", "\n0. Kembali ke daftar layanan\n")
+	fmt.Print("Pilihan Anda : ")
+	fmt.Scan(&x)
+
+	if x == 1 {
+		cariSumberPendapatan()
+		cariTransaksi()
+	} else if x == 2 {
+		cariTanggal()
+		cariTransaksi()
+	} else if x == 0 {
+		daftarLayanan()
+	} else {
+		fmt.Println("\nMasukan tidak valid, silahkan coba lagi\n")
+		cariTransaksi()
+	}
+}
+
+func cariSumberPendapatan() { //SEQUENTIAL SEARCH
+	var input string
+	var find bool
+	var i int
+	fmt.Print("Masukkan Sumber Pendapatan : ")
+	fmt.Scan(&input)
+
+	for i = 0; i < dataTransaksi; i++ {
+		if dataT[i].sumber == input {
+			cetakHasilCari(i)
+			find = true
+		}
+	}
+
+	if !find {
+		fmt.Println("Transaksi tidak ditemukan, silahkan masukkan sumber pendapatan yang lain\n")
+		cariSumberPendapatan()
+	}
+}
+
+func cariTanggal() { //SEQUENTIAL SEARCH
+	var find bool = false
+	var i, inputTanggal int
+	var inputBulan string
+
+	fmt.Print("\n1. Cari Tanggal Spesifik", "\n2. Cari Transaksi Bulanan", "\n0. Kembali ke daftar layanan\n")
+	fmt.Print("Pilihan Anda : ")
+	fmt.Scan(&x)
+
+	if x == 1 {
+		fmt.Print("Masukkan Tanggal & Bulan : ")
+		fmt.Scan(&inputTanggal, &inputBulan)
+
+		for i = 0; i < dataTransaksi; i++ {
+			if dataT[i].tanggal == inputTanggal && dataT[i].bulan == inputBulan {
+				cetakHasilCari(i)
+				find = true
+			}
+		}
+	} else if x == 2 {
+		fmt.Print("Masukkan Bulan : ")
+		fmt.Scan(&inputBulan)
+
+		for i = 0; i < dataTransaksi; i++ {
+			if dataT[i].bulan == inputBulan {
+				cetakHasilCari(i)
+				find = true
+			}
+		}
+	} else if x == 0 {
+		daftarLayanan()
+	} else {
+		fmt.Println("\nMasukan tidak valid, silahkan coba lagi")
+		cariTanggal()
+	}
+	if !find {
+		fmt.Println("Transaksi tidak ditemukan, silahkan masukkan tanggal yang lain")
+		cariTanggal()
+	}
+}
+
+func ubahTransaksi() {
+	var idx int
+
+	fmt.Println("=== Daftar Transaksi ===")
+	for i := 0; i < dataTransaksi; i++ {
+		fmt.Printf("Transaksi ke-%d:\n", i+1)
+		cetakHasilCari(i)
+	}
+
+	fmt.Print("Masukkan nomor transaksi yang ingin diubah (1 - ", dataTransaksi, "): ")
+	fmt.Scan(&idx)
+
+	idx--
+	if idx < 0 || idx >= dataTransaksi {
+		fmt.Println("Nomor transaksi tidak valid. Silakan coba lagi.")
+		ubahTransaksi()
+		return
+	}
+
+	fmt.Println("Masukkan data baru untuk transaksi ke-", idx+1)
+
+	fmt.Println("Pilih Sumber Pendapatan:")
+	fmt.Println("1. Wasiat")
+	fmt.Println("2. Freelance")
+	fmt.Println("3. ContenCreator")
+	fmt.Println("4. Investasi")
+	fmt.Println("5. Lainnya")
+
+	var pilihan int
+	fmt.Print("Pilihan Anda: ")
+	fmt.Scan(&pilihan)
+
+	if pilihan == 1 {
+		dataT[idx].sumber = "Wasiat"
+	} else if pilihan == 2 {
+		dataT[idx].sumber = "Freelance"
+	} else if pilihan == 3 {
+		dataT[idx].sumber = "ContenCreator"
+	} else if pilihan == 4 {
+		dataT[idx].sumber = "Investasi"
+	} else if pilihan == 5 {
+		fmt.Print("Masukkan sumber lainnya: ")
+		fmt.Scan(&dataT[idx].sumber)
+	} else {
+		fmt.Println("Pilihan tidak valid, silakan coba lagi.")
+		ubahTransaksi()
+		return
+	}
+
+	fmt.Print("Nominal: ")
+	fmt.Scan(&dataT[idx].nominal)
+	fmt.Print("Biaya Operasional: ")
+	fmt.Scan(&dataT[idx].biayaOperasional)
+	fmt.Print("Tanggal: ")
+	fmt.Scan(&dataT[idx].tanggal)
+	fmt.Print("Bulan: ")
+	fmt.Scan(&dataT[idx].bulan)
+
+	fmt.Println("Data berhasil diubah.")
+	daftarLayanan()
+}
+
+func hapusTransaksi() {
+	var idx int
+
+	fmt.Println("=== Daftar Transaksi ===")
+	for i := 0; i < dataTransaksi; i++ {
+		fmt.Printf("Transaksi ke-%d:\n", i+1)
+		cetakHasilCari(i)
+	}
+
+	fmt.Print("Masukkan nomor transaksi yang ingin dihapus (1 - ", dataTransaksi, "): ")
+	fmt.Scan(&idx)
+
+	idx--
+	if idx < 0 || idx >= dataTransaksi {
+		fmt.Println("Nomor transaksi tidak valid. Silakan coba lagi.")
+		hapusTransaksi()
+		return
+	}
+
+	var konfirmasi string
+	fmt.Print("Apakah Anda yakin ingin menghapus transaksi ini? (Y/T): ")
+	fmt.Scan(&konfirmasi)
+
+	if konfirmasi == "Y" || konfirmasi == "y" {
+
+		for i := idx; i < dataTransaksi-1; i++ {
+			dataT[i] = dataT[i+1]
+		}
+		dataTransaksi--
+		fmt.Println("Transaksi berhasil dihapus.")
+	} else {
+		fmt.Println("Penghapusan dibatalkan.")
+	}
+
+	// Kembali ke menu utama
+	daftarLayanan()
+}
+
+func cetakHasilCari(cari int) {
+	fmt.Println("=============================================")
+	fmt.Println("                TRANSAKSI ANDA               ")
+	fmt.Println("=============================================")
+	fmt.Println("Sumber Pendapatan : ", dataT[cari].sumber)
+	fmt.Println("Nominal : ", dataT[cari].nominal)
+	fmt.Println("Biaya Operasional : ", dataT[cari].biayaOperasional)
+	fmt.Println("Tanggal : ", dataT[cari].tanggal, dataT[cari].bulan)
+	fmt.Println("=============================================")
+}
+
+func laporanAnalisis() {
+	fmt.Print("\n1. Laporan berdasarkan Sumber Pendapatan", "\n2. Laporan berdasarkan pendapatan transaksi", "\n0. Kembali ke daftar layanan\n")
+	fmt.Print("Pilihan Anda : ")
+	fmt.Scan(&x)
+
+	if x == 0 {
+		daftarLayanan()
+	} else if x == 1 {
+		matchBulan(x)
+		daftarLayanan()
+	} else if x == 2 {
+		matchBulan(x)
+		daftarLayanan()
+	}
+}
+
+func BeriRekomendasi(n, penghasilan int, s string) {
+	if n < 0 {
+		fmt.Printf("Kamu rugi sebesar %d rupiah pada bulan %s", n, s)
+	} else if n == 0 {
+		fmt.Printf("Kamu tidak mengalami keuntungan dan juga kerugian pada bulan %s", s)
+	} else if n > 0 {
+		fmt.Printf("Kamu untung sebesar %d rupiah dan sebesar %d%% dari total penghasilan kamu", n, (n * 100 / penghasilan))
+	}
+}
+
+func cetakLaporan(bulan string, penghasilan, laba, totalBiayaOperasional int) {
+	fmt.Println("=============================================")
+	fmt.Println("              LAPORAN ANDA BULAN             ")
+	fmt.Println("                                   		  ")
+	fmt.Printf("                    %s                       ", bulan)
+	fmt.Println("                                             ")
+	fmt.Println("=============================================")
+	fmt.Println("Total Penghasilan       : ", penghasilan)
+	fmt.Println("Total Biaya Operasional : ", totalBiayaOperasional)
+	fmt.Println("Total Laba              : ", laba)
+	fmt.Println("=============================================")
+}
+
+func matchBulan(x int) {
+	var penghasilan, laba, totalBiayaOperasional int
+	var i, j int
+	var input string
+	var find bool = false
+	var hasil arrTransaksi
+
+	fmt.Print("Masukkan Bulan : ")
+	fmt.Scan(&input)
+	for i = 0; i < dataTransaksi; i++ {
+		if dataT[i].bulan == input {
+			penghasilan += dataT[i].nominal
+			totalBiayaOperasional += dataT[i].biayaOperasional
+			find = true
+			hasil[j] = dataT[i]
+			j++
+		}
+	}
+
+	if !find {
+		fmt.Print("\nTidak ada transaksi di bulan ini, silahkan masukkan bulan yang lain\n")
+
+	}
+
+	if x == 1 {
+		urutSumber(&hasil, j)
+		cetakHasilUrut(&hasil, j)
+	} else if x == 2 {
+		urutPendapatan(&hasil, j)
+		cetakHasilUrut(&hasil, j)
+	}
+
+	laba = penghasilan - totalBiayaOperasional
+	cetakLaporan(input, penghasilan, laba, totalBiayaOperasional)
+	BeriRekomendasi(laba, penghasilan, input)
+}
+
+func urutSumber(dataT *arrTransaksi, n int) { //INSERT SORTION
+	var i, j int
+	var index transaksi
+
+	for i = 1; i < n; i++ {
+		index = (*dataT)[i]
+		j = i - 1
+
+		for j >= 0 && (*dataT)[j].sumber > index.sumber {
+			(*dataT)[j+1] = (*dataT)[j]
+			j--
+		}
+		(*dataT)[j+1] = index
+	}
+}
+
+func urutPendapatan(dataT *arrTransaksi, n int) {//INSERTION SORT
+	var i, j int
+	var index transaksi
+
+	for i = 1; i < n; i++ {
+		index = (*dataT)[i]
+		j = i - 1
+
+		for j >= 0 && (*dataT)[j].nominal > index.nominal {
+			(*dataT)[j+1] = (*dataT)[j]
+			j--
+		}
+		(*dataT)[j+1] = index
+	}
+}
+
+func cetakHasilUrut(dataT *arrTransaksi, n int) {
+	var i int
+
+	for i = 0; i < n; i++ {
+		fmt.Println("=============================================")
+		fmt.Println("                TRANSAKSI ANDA               ")
+		fmt.Println("=============================================")
+		fmt.Println("Sumber Pendapatan : ", (*dataT)[i].sumber)
+		fmt.Println("Nominal : ", (*dataT)[i].nominal)
+		fmt.Println("Biaya Operasional : ", (*dataT)[i].biayaOperasional)
+		fmt.Println("Pendapatan Bersih : ", (*dataT)[i].nominal-(*dataT)[i].biayaOperasional)
+		fmt.Println("Tanggal : ", (*dataT)[i].tanggal, (*dataT)[i].bulan)
+		fmt.Println("=============================================")
+	}
+}
+
+func dummy(){
+	dataT[0] = transaksi{"Freelance", 5000000, 1000000, 5, "Januari"}
+	dataT[1] = transaksi{"Investasi", 8000000, 500000, 12, "Januari"}
+	dataT[2] = transaksi{"ContenCreator", 3000000, 700000, 7, "Februari"}
+	dataT[3] = transaksi{"Wasiat", 10000000, 0, 1, "Februari"}
+	dataT[4] = transaksi{"Freelance", 4500000, 1000000, 15, "Maret"}
+	dataT[5] = transaksi{"Lainnya", 2000000, 250000, 20, "Maret"}
+	dataT[6] = transaksi{"Investasi", 6000000, 300000, 3, "April"}
+	dataT[7] = transaksi{"ContenCreator", 3500000, 1000000, 11, "April"}
+	dataT[8] = transaksi{"Freelance", 7000000, 1500000, 28, "Mei"}
+	dataT[9] = transaksi{"Wasiat", 12000000, 0, 30, "Mei"}
+	dataT[10] = transaksi{"Freelance", 4000000, 800000, 9, "Juni"}
+	dataT[11] = transaksi{"Investasi", 7500000, 250000, 13, "Juni"}
+	dataT[12] = transaksi{"Lainnya", 2200000, 200000, 21, "Juli"}
+	dataT[13] = transaksi{"ContenCreator", 3200000, 600000, 5, "Juli"}
+	dataT[14] = transaksi{"Freelance", 5500000, 1200000, 17, "Agustus"}
+	dataT[15] = transaksi{"Investasi", 9000000, 400000, 22, "Agustus"}
+	dataT[16] = transaksi{"Wasiat", 11000000, 0, 6, "September"}
+	dataT[17] = transaksi{"Lainnya", 1800000, 150000, 14, "September"}
+	dataT[18] = transaksi{"Freelance", 4700000, 1000000, 25, "Oktober"}
+	dataT[19] = transaksi{"ContenCreator", 3900000, 900000, 10, "Oktober"}
+	dataTransaksi = 20
+}
+
+func lihatTransaksi(){
+	var hasil arrTransaksi
+	var j,i int
+	
+	fmt.Print("\n1. Urut berdasarkan sumber pendapatan", "\n2. Urut berdasarkan Income", "\n0. Kembali ke daftar layanan\n")
+	fmt.Print("Pilihan Anda : ")
+	fmt.Scan(&x)
+	
+	j = dataTransaksi
+	
+	for i=0; i<j;i++{
+		hasil[i] = dataT[i]
+	}
+	
+	if x == 1{
+		urutSumber(&hasil, j)
+		cetakHasilUrut(&hasil, j)
+		lihatTransaksi()
+	} else if x == 2{
+		urutPendapatan(&hasil, j)
+		cetakHasilUrut(&hasil, j)
+		lihatTransaksi()
+	} else if x == 0{
+		daftarLayanan()
+	} else {
+		fmt.Println("\nMasukan tidak valid, silahkan coba lagi")
+		lihatTransaksi()
+	}
+}
