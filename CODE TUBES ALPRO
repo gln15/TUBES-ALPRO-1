@@ -365,6 +365,10 @@ func cetakLaporan(bulan string, penghasilan, laba, totalBiayaOperasional int) {
 	fmt.Println("Total Penghasilan       : ", penghasilan)
 	fmt.Println("Total Biaya Operasional : ", totalBiayaOperasional)
 	fmt.Println("Total Laba              : ", laba)
+ 	maxLaba, bulanMax, tglMax, idx := keuntunganTertinggi()
+    	fmt.Println("Keuntungan Tertinggi    : ", maxLaba)
+    	fmt.Printf("Pada Tanggal            : %d %s\n", tglMax, bulanMax)
+    	fmt.Println("Sumber Pendapatan       : ", dataT[idx].sumber)
 	fmt.Println("=============================================")
 }
 
@@ -476,7 +480,18 @@ func dummy(){
 	dataT[19] = transaksi{"ContenCreator", 3900000, 900000, 10, "Oktober"}
 	dataTransaksi = 20
 }
-
+func keuntunganTertinggi() (int, string, int, int) {
+    var maxLaba int = dataT[0].nominal - dataT[0].biayaOperasional
+    var idx int = 0
+    for i := 1; i < dataTransaksi; i++ {
+        laba := dataT[i].nominal - dataT[i].biayaOperasional
+        if laba > maxLaba {
+            maxLaba = laba
+            idx = i
+        }
+    }
+    return maxLaba, dataT[idx].bulan, dataT[idx].tanggal, idx
+}
 func lihatTransaksi(){
 	var hasil arrTransaksi
 	var j,i int
