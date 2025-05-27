@@ -97,6 +97,7 @@ func isiTransaksi() {
 	fmt.Println("3. ContenCreator")
 	fmt.Println("4. Investasi")
 	fmt.Println("5. Lainnya")
+	fmt.Println("0. Kembali ke daftar layanan") 
 
 	var pilihan int
 	fmt.Print("Pilihan Anda: ")
@@ -113,6 +114,8 @@ func isiTransaksi() {
 	} else if pilihan == 5 {
 		fmt.Print("Masukkan sumber lainnya: ")
 		fmt.Scan(&t.sumber)
+	} else if pilihan == 0 {
+		daftarLayanan()
 	} else {
 		fmt.Println("Pilihan tidak valid, silakan coba lagi.")
 		isiTransaksi()
@@ -129,6 +132,7 @@ func isiTransaksi() {
 
 	dataT[dataTransaksi] = t
 	dataTransaksi++
+	fmt.Println("Data berhasil dimasukkan")
 }
 
 func cariTransaksi() {
@@ -238,6 +242,7 @@ func ubahTransaksi() {
 	fmt.Println("3. ContenCreator")
 	fmt.Println("4. Investasi")
 	fmt.Println("5. Lainnya")
+	fmt.Println("0. Kembali ke daftar layanan") 
 
 	var pilihan int
 	fmt.Print("Pilihan Anda: ")
@@ -254,6 +259,8 @@ func ubahTransaksi() {
 	} else if pilihan == 5 {
 		fmt.Print("Masukkan sumber lainnya: ")
 		fmt.Scan(&dataT[idx].sumber)
+	} else if pilihan == 0 {
+		daftarLayanan()
 	} else {
 		fmt.Println("Pilihan tidak valid, silakan coba lagi.")
 		ubahTransaksi()
